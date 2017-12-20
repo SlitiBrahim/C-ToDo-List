@@ -16,7 +16,11 @@ int main() {
 }
 
 void displayWelcome() {
-    printf("ToDo List in C\n\n");
+    printf("=== ToDo List in C ===\n");
+    printf("=== Author: SLITI Brahim ===\n");
+    printf("=== GitHub: https://github.com/SlitiBrahim/C-ToDo-List ===\n");
+
+    printf("\n");
 }
 
 void userInput(int* ptInProgress, struct Task *tasks, int* ptIdIncrementor) {
