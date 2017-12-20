@@ -5,7 +5,7 @@
 
 typedef struct Task Task;
 struct Task {
-    // unsigned id;
+    unsigned id;
     char name[50];
     char desc[100];
     bool isDone;
@@ -14,8 +14,9 @@ struct Task {
 
 // Function Declarations
 void displayWelcome();
-void userInput(int *ptInProgress);
+void userInput(int *ptInProgress, struct Task *tasks, int *ptIdIncrementor);
 void debugTask(struct Task task);
-void initTask(struct Task *task);
+void initTask(struct Task *task, int *ptIdIncrementor);
 void clearBuffer(char *command);
-void interpret(char *command, int* ptInProgress);
+void interpret(char *command, int *ptInProgress, struct Task *tasks, int *ptIdIncrementor);
+void createCommand(struct Task *tasks, int *ptIdIncrementor);

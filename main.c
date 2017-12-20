@@ -1,16 +1,33 @@
 #include "header.h"
 
 int main() {
-    // Task sport;
 
-    // initTask(&sport);
+    int idIncrementor = 0;
+    Task tasks[50];
+
+    Task sport;
+    initTask(&sport, &idIncrementor);
+    strcpy(sport.name, "Do Sport");
+    strcpy(sport.desc, "Eliminer les kebabs");
     // debugTask(sport);
 
-    displayWelcome();
+    Task eat;
+    initTask(&eat, &idIncrementor);
+    strcpy(eat.name, "Mieux Manger");
+    strcpy(eat.desc, "Haha");
+    // debugTask(eat);
+
+    tasks[0] = sport;
+    tasks[1] = eat;
+
     int inProgress = 1;
-    while (inProgress) {
-        userInput(&inProgress);
-    }
+    userInput(&inProgress, tasks, &idIncrementor);
+    
+    // displayWelcome();
+    // while (inProgress) {
+    //     userInput(&inProgress, tasks, &idIncrementor);
+        
+    // }
 
     return 0;
 }
@@ -19,18 +36,22 @@ void displayWelcome() {
     printf("ToDo List in C\n\n");
 }
 
-void userInput(int* ptInProgress) {
+void userInput(int* ptInProgress, struct Task *tasks, int* ptIdIncrementor) {
+
+    // for(int i = 0; i < 2; i++) {
+    //     printf("%s\n", tasks[i].name);
+    // }
 
     printf("\nEnter Command: (help for commands) ");
     char command[100];
     fgets(command, sizeof(command), stdin);
     clearBuffer(command);
 
-    // printf("Result: %s", command);
-    interpret(command, ptInProgress);
+    interpret(command, ptInProgress, tasks, ptIdIncrementor);
 }
 
 void debugTask(struct Task task) {
+    printf("Id: %d\n", task.id);
     printf("Name: %s\n", task.name);
     printf("Description: %s\n", task.desc);
     printf("Is Done ?: ");
@@ -38,7 +59,8 @@ void debugTask(struct Task task) {
     printf("\nDate: %s\n", task.date);
 }
 
-void initTask(struct Task *ptTask) {
+void initTask(struct Task *ptTask, int* ptIdIncrementor) {
+    ptTask->id = (*ptIdIncrementor)++;
     strcpy(ptTask->name, "Undefined");
     strcpy(ptTask->desc, "Undefined");
     strcpy(ptTask->name, "Undefined");
@@ -64,10 +86,11 @@ void helpDisplay() {
     printf("exit:  Exit the program\n");
 }
 
-void interpret(char* command, int* ptInProgress) {
-
+void interpret(char *command, int *ptInProgress, struct Task *tasks, int *ptIdIncrementor)
+{
     if(strcmp("create", command) == 0) {
         printf("create");
+        createCommand(tasks, ptIdIncrementor);
     }
     else if(strcmp("help", command) == 0) {
         helpDisplay();
@@ -88,4 +111,15 @@ void interpret(char* command, int* ptInProgress) {
     else {
         printf("Invalid Command, please type 'help' for displaying available commands");
     }
+}
+
+void createCommand(struct Task *tasks, int *ptIdIncrementor)
+{
+    Task tmpTask;
+    initTask(&tmpTask, ptIdIncrementor);
+
+    debugTask(tmpTask);
+
+    printf("\nTask's name: ");
+    fgets(tmpTask.name, sizeof(50), stdin);
 }
