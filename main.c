@@ -21,13 +21,13 @@ int main() {
     tasks[1] = eat;
 
     int inProgress = 1;
-    userInput(&inProgress, tasks, &idIncrementor);
+    // userInput(&inProgress, tasks, &idIncrementor);
     
-    // displayWelcome();
-    // while (inProgress) {
-    //     userInput(&inProgress, tasks, &idIncrementor);
+    displayWelcome();
+    while (inProgress) {
+        userInput(&inProgress, tasks, &idIncrementor);
         
-    // }
+    }
 
     return 0;
 }
@@ -60,7 +60,7 @@ void debugTask(struct Task task) {
 }
 
 void initTask(struct Task *ptTask, int* ptIdIncrementor) {
-    ptTask->id = (*ptIdIncrementor)++;
+    ptTask->id = ++(*ptIdIncrementor);
     strcpy(ptTask->name, "Undefined");
     strcpy(ptTask->desc, "Undefined");
     strcpy(ptTask->name, "Undefined");
@@ -75,7 +75,8 @@ void clearBuffer(char* command) {
     p = strchr(command, '\n');
     if (p) {
         *p = '\0';
-    } else { while((getchar() != '\n') && (getchar() != EOF)); }
+    }
+    // else { while((getchar() != '\n') && (getchar() != EOF)); }
 }
 
 void helpDisplay() {
@@ -89,8 +90,12 @@ void helpDisplay() {
 void interpret(char *command, int *ptInProgress, struct Task *tasks, int *ptIdIncrementor)
 {
     if(strcmp("create", command) == 0) {
-        printf("create");
         createCommand(tasks, ptIdIncrementor);
+    }
+    else if(strcmp("tasks", command) == 0) {
+        for (unsigned i = 0; i < (*ptIdIncrementor); i++) {
+            debugTask(tasks[i]);
+        }
     }
     else if(strcmp("help", command) == 0) {
         helpDisplay();
@@ -114,12 +119,24 @@ void interpret(char *command, int *ptInProgress, struct Task *tasks, int *ptIdIn
 }
 
 void createCommand(struct Task *tasks, int *ptIdIncrementor)
-{
+{   
     Task tmpTask;
     initTask(&tmpTask, ptIdIncrementor);
+    // char tmpName[50] = {0};
 
-    debugTask(tmpTask);
+    printf("Task's name: ");
+    fgets(tmpTask.name, 50, stdin);
+    clearBuffer(tmpTask.name);
 
-    printf("\nTask's name: ");
-    fgets(tmpTask.name, sizeof(50), stdin);
+    printf("Task's description: ");
+    fgets(tmpTask.desc, 100, stdin);
+    clearBuffer(tmpTask.desc);
+
+    printf("Task's date: ");
+    fgets(tmpTask.date, 50, stdin);
+    clearBuffer(tmpTask.date);
+
+    tmpTask.isDone = false;
+
+    tasks[(*ptIdIncrementor - 1)] = tmpTask;    //inserting new task
 }
