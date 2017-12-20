@@ -4,24 +4,7 @@ int main() {
 
     int idIncrementor = 0;
     Task tasks[50];
-
-    Task sport;
-    initTask(&sport, &idIncrementor);
-    strcpy(sport.name, "Do Sport");
-    strcpy(sport.desc, "Eliminer les kebabs");
-    // debugTask(sport);
-
-    Task eat;
-    initTask(&eat, &idIncrementor);
-    strcpy(eat.name, "Mieux Manger");
-    strcpy(eat.desc, "Haha");
-    // debugTask(eat);
-
-    tasks[0] = sport;
-    tasks[1] = eat;
-
     int inProgress = 1;
-    // userInput(&inProgress, tasks, &idIncrementor);
     
     displayWelcome();
     while (inProgress) {
@@ -89,9 +72,6 @@ void interpret(char *command, int *ptInProgress, struct Task *tasks, int *ptIdIn
         createCommand(tasks, ptIdIncrementor);
     }
     else if(strcmp("tasks", command) == 0) {
-        // for (unsigned i = 0; i < (*ptIdIncrementor); i++) {
-        //     debugTask(tasks[i]);
-        // }
         display(tasks, ptIdIncrementor);
     }
     else if(strcmp("help", command) == 0) {
@@ -99,11 +79,28 @@ void interpret(char *command, int *ptInProgress, struct Task *tasks, int *ptIdIn
     }
     else if (strcmp("done", command) == 0)
     {
-        printf("done");
+        int selectedId = selectTaskId("done", ptIdIncrementor);
+
+        if (selectedId) {
+            doneCommand(&tasks[--selectedId], true);
+        }
+        else {
+            printf("Invalid Task ID, please select a right one.");
+        }
+
     }
     else if (strcmp("undone", command) == 0)
     {
-        printf("undone");
+        int selectedId = selectTaskId("done", ptIdIncrementor);
+
+        if (selectedId)
+        {
+            doneCommand(&tasks[--selectedId], false);
+        }
+        else
+        {
+            printf("Invalid Task ID, please select a right one.");
+        }
     }
     else if (strcmp("exit", command) == 0)
     {
@@ -128,8 +125,10 @@ void createCommand(struct Task *tasks, int *ptIdIncrementor)
 
     tasks[(*ptIdIncrementor - 1)] = tmpTask;    //inserting new task
 
-    printf("\nTask created successfully.");
+    printf("\nTask created successfully.\n");
+    displayHeaderList();
     displayTask(tasks[(*ptIdIncrementor - 1)]);
+    printf("\n");
 }
 
 void taskInput(char displayMsg[], int propLength, char taskMember[]) {
@@ -140,7 +139,7 @@ void taskInput(char displayMsg[], int propLength, char taskMember[]) {
 
 void display(struct Task *tasks, int *ptIdIncrementor) {
 
-    // print
+    displayHeaderList();
 
     for (unsigned i = 0; i < (*ptIdIncrementor); i++) {
         displayTask(tasks[i]);
@@ -151,12 +150,40 @@ void display(struct Task *tasks, int *ptIdIncrementor) {
 
 void displayTask(struct Task task) {
 
-
     printf("\n%d\t\t\t", task.id);
     printf("%s\t\t\t", task.name);
     printf("%s\t\t\t", task.desc);
     printf(task.isDone ? "Done" : "Not done");
     printf(strcmp(task.date, "") == 0 ? "\t\t\tNot Defined" : "\t\t\t%s", task.date);
 
-    // printf("\n");
+}
+
+void displayHeaderList() {
+
+    printf("\nTask ID\t\t\t");
+    printf("Task Name\t\t\t");
+    printf("Task Description\t\t\t");
+    printf("Status\t\t\t");
+    printf("\t\t\tTask End Date");
+
+    printf("\n");
+}
+
+int selectTaskId(char doneOrUndone[], int *ptIdIncrementor) {
+
+    unsigned tmpId = 0;
+
+    printf("\nSelect the id of the task you want to mark as %s: ", doneOrUndone);
+    scanf("%d", &tmpId);
+    while ((getchar() != '\n') && (getchar() != EOF));
+
+    if (tmpId > 0 && tmpId <= (*ptIdIncrementor)) {
+        return tmpId;
+    }
+
+    return -1;
+}
+
+void doneCommand(struct Task *ptTask, bool isDone) {
+    ptTask->isDone = isDone;
 }

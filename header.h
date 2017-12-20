@@ -18,10 +18,13 @@ struct Task {
 void displayWelcome();
 void userInput(int *ptInProgress, struct Task *tasks, int *ptIdIncrementor);
 void debugTask(struct Task task);
-void initTask(struct Task *task, int *ptIdIncrementor);
+void initTask(struct Task *ptTask, int *ptIdIncrementor);
 void clearBuffer(char *command);
 void interpret(char *command, int *ptInProgress, struct Task *tasks, int *ptIdIncrementor);
 void createCommand(struct Task *tasks, int *ptIdIncrementor);
 void taskInput(char displayMsg[], int propLength, char taskMember[]);
 void display(struct Task *tasks, int *ptIdIncrementor);
 void displayTask(struct Task task);
+void displayHeaderList();
+void doneCommand(struct Task *ptTask, bool isDone);
+int selectTaskId(char doneOrUndone[], int *ptIdIncrementor);
