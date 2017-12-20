@@ -38,10 +38,6 @@ void displayWelcome() {
 
 void userInput(int* ptInProgress, struct Task *tasks, int* ptIdIncrementor) {
 
-    // for(int i = 0; i < 2; i++) {
-    //     printf("%s\n", tasks[i].name);
-    // }
-
     printf("\nEnter Command: (help for commands) ");
     char command[100];
     fgets(command, sizeof(command), stdin);
@@ -76,12 +72,12 @@ void clearBuffer(char* command) {
     if (p) {
         *p = '\0';
     }
-    // else { while((getchar() != '\n') && (getchar() != EOF)); }
 }
 
 void helpDisplay() {
     printf("\ncreate:  create new task\n");
     printf("help:  display available commands\n");
+    printf("tasks:  display taks to achieve\n");
     printf("done:  mark a specified task as done\n");
     printf("undone:  mark a specified task as undone\n");
     printf("exit:  Exit the program\n");
@@ -93,9 +89,10 @@ void interpret(char *command, int *ptInProgress, struct Task *tasks, int *ptIdIn
         createCommand(tasks, ptIdIncrementor);
     }
     else if(strcmp("tasks", command) == 0) {
-        for (unsigned i = 0; i < (*ptIdIncrementor); i++) {
-            debugTask(tasks[i]);
-        }
+        // for (unsigned i = 0; i < (*ptIdIncrementor); i++) {
+        //     debugTask(tasks[i]);
+        // }
+        display(tasks, ptIdIncrementor);
     }
     else if(strcmp("help", command) == 0) {
         helpDisplay();
@@ -110,7 +107,7 @@ void interpret(char *command, int *ptInProgress, struct Task *tasks, int *ptIdIn
     }
     else if (strcmp("exit", command) == 0)
     {
-        printf("\nThank you for having use my ToDo List\n");
+        printf("\nThank you for having used my ToDo List\n");
         *ptInProgress = 0;
     }
     else {
@@ -122,21 +119,44 @@ void createCommand(struct Task *tasks, int *ptIdIncrementor)
 {   
     Task tmpTask;
     initTask(&tmpTask, ptIdIncrementor);
-    // char tmpName[50] = {0};
 
-    printf("Task's name: ");
-    fgets(tmpTask.name, 50, stdin);
-    clearBuffer(tmpTask.name);
-
-    printf("Task's description: ");
-    fgets(tmpTask.desc, 100, stdin);
-    clearBuffer(tmpTask.desc);
-
-    printf("Task's date: ");
-    fgets(tmpTask.date, 50, stdin);
-    clearBuffer(tmpTask.date);
+    taskInput("Task's name: ", 50, tmpTask.name);
+    taskInput("Task's description: ", 100, tmpTask.desc);
+    taskInput("Task's date: ", 50, tmpTask.date);
 
     tmpTask.isDone = false;
 
     tasks[(*ptIdIncrementor - 1)] = tmpTask;    //inserting new task
+
+    printf("\nTask created successfully.");
+    displayTask(tasks[(*ptIdIncrementor - 1)]);
+}
+
+void taskInput(char displayMsg[], int propLength, char taskMember[]) {
+    printf("%s", displayMsg);
+    fgets(taskMember, propLength, stdin);
+    clearBuffer(taskMember);
+}
+
+void display(struct Task *tasks, int *ptIdIncrementor) {
+
+    // print
+
+    for (unsigned i = 0; i < (*ptIdIncrementor); i++) {
+        displayTask(tasks[i]);
+    }
+
+    printf("\n");
+}
+
+void displayTask(struct Task task) {
+
+
+    printf("\n%d\t\t\t", task.id);
+    printf("%s\t\t\t", task.name);
+    printf("%s\t\t\t", task.desc);
+    printf(task.isDone ? "Done" : "Not done");
+    printf(strcmp(task.date, "") == 0 ? "\t\t\tNot Defined" : "\t\t\t%s", task.date);
+
+    // printf("\n");
 }
